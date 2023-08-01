@@ -20,15 +20,17 @@ local codePattern = '^HAI%s%d%.%d\n\n(.+)\nKTHXBYE\n$'
 local codeFilter  = LOLCODE:match(codePattern):split('\n')
 for k,v in pairs(codeFilter) do
      codeFilter[k] = codeFilter[k]:gsub('VISIBLE (.+) MKAY', 'debugPrint(%1)')
-     codeFilter[k] = codeFilter[k]:gsub('OBTW', '--[[')
-     codeFilter[k] = codeFilter[k]:gsub('TLDR', ']]')
+     codeFilter[k] = codeFilter[k]:gsub('TIE', ']]')
+     codeFilter[k] = codeFilter[k]:gsub('YARN', '[[')
+     codeFilter[k] = codeFilter[k]:gsub('OBTW', '--[=[')
+     codeFilter[k] = codeFilter[k]:gsub('TLDR', ']=]')
      codeFilter[k] = codeFilter[k]:gsub('BTW', '--')
      codeFilter[k] = codeFilter[k]:gsub('ITZ', '=')
      codeFilter[k] = codeFilter[k]:gsub('WIN', 'true'):gsub('LOSE', 'false')
      codeFilter[k] = codeFilter[k]:gsub('FOUND YR (.-)', 'return %1')
      codeFilter[k] = codeFilter[k]:gsub('IF U SAY SO', 'end')
      codeFilter[k] = codeFilter[k]:gsub('FOREVER', '...')
-
+     
      -- Variables & Reassigning
      if v:match('ONLY! I HAS A %w+') then
           codeFilter[k] = codeFilter[k]:gsub('ONLY!', 'local')
@@ -37,16 +39,7 @@ for k,v in pairs(codeFilter) do
      if v:match('I HAS A %w+ ITZ .-') then
           codeFilter[k] = codeFilter[k]:gsub('I HAS A%s+', '')
      end
-
-     -- Math
-     codeFilter[k] = codeFilter[k]:gsub('SUM OF (.-) AN (.-)', '%1 + %2')
-     codeFilter[k] = codeFilter[k]:gsub('DIFF OF (.-) AN (.-)', '%1 - %2')
-     codeFilter[k] = codeFilter[k]:gsub('PRODUKT OF (.-) AN (.-)', '%1 * %2')
-     codeFilter[k] = codeFilter[k]:gsub('QUOSHUNT OF (.-) AN (.-)', '%1 / %2')
-     codeFilter[k] = codeFilter[k]:gsub('MOD OF (.-) AN (.-)', '%1 %% %2')
-     codeFilter[k] = codeFilter[k]:gsub('EXPO OF (.-) AN (.-)', '%1^%2')
-     codeFilter[k] = codeFilter[k]:gsub('BECOME EVIL (.-)', '-%1')
-
+     
      -- Conditions
      codeFilter[k] = codeFilter[k]:gsub('BOTH SAEM (.-) AN (.-)', '%1 == %2')
      codeFilter[k] = codeFilter[k]:gsub('DIFFRINT (.-) AN (.-)', '%1 ~= %2')
@@ -54,6 +47,20 @@ for k,v in pairs(codeFilter) do
      codeFilter[k] = codeFilter[k]:gsub('IS SAEM SMALLR (.-) AN (.-)', '%1 <= %2')
      codeFilter[k] = codeFilter[k]:gsub('IS BIGGR (.-) AN (.-)', '%1 > %2')
      codeFilter[k] = codeFilter[k]:gsub('IS SMALLR (.-) AN (.-)', '%1 < %2')
+
+     -- Operators
+     codeFilter[k] = codeFilter[k]:gsub('SUM OF (.-) AN (.-)', '%1 + %2')
+     codeFilter[k] = codeFilter[k]:gsub('DIFF OF (.-) AN (.-)', '%1 - %2')
+     codeFilter[k] = codeFilter[k]:gsub('PRODUKT OF (.-) AN (.-)', '%1 * %2')
+     codeFilter[k] = codeFilter[k]:gsub('QUOSHUNT OF (.-) AN (.-)', '%1 / %2')
+     codeFilter[k] = codeFilter[k]:gsub('MOD OF (.-) AN (.-)', '%1 %% %2')
+     codeFilter[k] = codeFilter[k]:gsub('EXPO OF (.-) AN (.-)', '%1^%2')
+     codeFilter[k] = codeFilter[k]:gsub('BECOME EVIL (.-)', '-%1')
+     codeFilter[k] = codeFilter[k]:gsub('LOOONG (.-)', '#%1')
+     codeFilter[k] = codeFilter[k]:gsub('SMOOSH (.-) AN (.-)', '%1 .. %2')
+     codeFilter[k] = codeFilter[k]:gsub('BOTH (.-) AN (.-)', '%1 and %2')
+     codeFilter[k] = codeFilter[k]:gsub('EITHER (.-) AN (.-)', '%1 or %2')
+     codeFilter[k] = codeFilter[k]:gsub('NOT (.-)', 'not %1')
 
      -- Statements
      codeFilter[k] = codeFilter[k]:gsub('O RLY (.-) THEN%?', 'if %1 then')
@@ -96,5 +103,5 @@ for k,v in pairs(codeFilter) do
 end
 
 function onCreate()
-     saveFile('PsychPorts/scripts/LOLTEST.lua', codeResult:sub(1, #subResult - #('\n')))
+     saveFile('PsychPorts/scripts/LOLTEST.lua', codeResult:sub(1, #codeResult - #('\n')))
 end
