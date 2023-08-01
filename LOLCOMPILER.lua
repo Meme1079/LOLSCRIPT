@@ -19,6 +19,7 @@ local LOLCODE = getTextFileContent('mods/PsychPorts/scripts/LOLCODE.lol')
 local codePattern = '^HAI%s%d%.%d\n\n(.+)\nKTHXBYE\n$'
 local codeFilter  = LOLCODE:match(codePattern):split('\n')
 for k,v in pairs(codeFilter) do
+     codeFilter[k] = codeFilter[k]:gsub('VISIBLE (.+) WITH PRIDE (.+) MKAY', 'debugPrint(%1, %2)')
      codeFilter[k] = codeFilter[k]:gsub('VISIBLE (.+) MKAY', 'debugPrint(%1)')
      codeFilter[k] = codeFilter[k]:gsub('TIE', ']]')
      codeFilter[k] = codeFilter[k]:gsub('YARN', '[[')
@@ -94,6 +95,16 @@ for k,v in pairs(codeFilter) do
      if v:match('I IZ %w+() MKAY') then
           codeFilter[k] = codeFilter[k]:gsub('I IZ%s', '')
           codeFilter[k] = codeFilter[k]:gsub('%sMKAY', '')
+     end
+     
+     if v:match('THAT (.-) ITZ (.-)') then
+          codeFilter[k] = codeFilter[k]:gsub('THAT (.-) ITZ (.-)', '%1 = %')
+          codeFilter[k] = codeFilter[k]:gsub('THAT%s*', '')
+          codeFilter[k] = codeFilter[k]:gsub('%s+AN%s*', ', ')
+     end
+     if v:match('THAT (.-)') then
+          codeFilter[k] = codeFilter[k]:gsub('THAT (.-) AN (.-)', '%1, ')
+          codeFilter[k] = codeFilter[k]:gsub('THAT (.-)', '')
      end
 end
 

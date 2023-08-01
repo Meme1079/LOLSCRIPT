@@ -1,18 +1,12 @@
-function onCreate()
-     makeLuaText("tag", "Hi", 0, 0, 0)
-     setObjectCamera("tag", "camHUD")
-     setTextSize("tag", 2 * 30)
-     addLuaText("tag")
+function median(min, max) -- Gets the mid value of the min and max value
+     return (min + max) / 2
 end
  
-function onCreatePost()
-     setProperty("iconP1.visible", false)
-     setObjectOrder("tag", getObjectOrder("iconP1"))
+function isEven(num) -- Checks if it's an even number
+     return num % 2 == 0
 end
  
-function onUpdatePost(elapsed)
-     setProperty("tag.x", getProperty("iconP1.x") + 30)
-     setProperty("tag.y", getProperty("iconP1.y") + 50)
-     setProperty("tag.scale.x", getProperty("iconP1.scale.x"))
-     setProperty("tag.scale.y", getProperty("iconP1.scale.y"))
-end
+local red = "ff0000"
+local green = "00ff00"
+debugPrint(median(13, 83), red) -- will print > 'false'
+debugPrint(isEven(13), green) -- will print > 48
