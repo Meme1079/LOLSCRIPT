@@ -1,0 +1,7 @@
+{
+	"name": "LOLSCRIPT",
+	"description": "IDK what to put here",
+	"restart": false,
+	"runsGlobally": true,
+	"color": [143, 38, 0]
+}
