@@ -12,11 +12,13 @@ pos HAS A SUM OF LOOONG pos AN 1 ITZ xpos
 pos HAS A SUM OF LOOONG pos AN 1 ITZ ypos
 
 ONLY! HOW IZ I toboolean(YR boo) BTW yarn to troof
-    FOUND YR CHECK BOTH SAEM boo AN "true" ORLY? WIN NAH ITZ LOSE
+    FOUND YR CHECK BOTH SAEM boo AN "true" ORLY? WIN NAH ITZ FAIL
 IF U SAY SO
  
 ONLY! I HAS A result ITZ I IZ toboolean(YR "true") MKAY
 HOW IZ I onCreate()
     VISIBLE (YR result)
-    VISIBLE (YR pos Z 1 NOW Z 2 NOW AN YR pos Z 2 NOW Z 1 NOW)
+    VISIBLE (YR pos Z 1 AT Z 2 AT AN YR pos Z 2 AT Z 1 AT)
 IF U SAY SO
+
+KTHXBYE

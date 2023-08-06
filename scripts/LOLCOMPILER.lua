@@ -44,7 +44,6 @@ end
 local LOLCODE = getTextFileContent('mods/LOLSCRIPT/scripts/LOLCODE.lol')
 local codePattern = '^HAI%s%d%.%d\n\n(.+)\nKTHXBYE\n$'
 local codeFilter  = LOLCODE:match(codePattern)
-local saveLOLCODE = {}
 function filterLOLCODE()
      local checkIfVarExist = {}
      for matchy in LOLCODE:gmatch('I HAS A ([%w+_]+)') do
@@ -69,7 +68,7 @@ function filterLOLCODE()
      end
     
      local function showSyntaxLOLCODE(tableToSave, patternToMatch)
-          for k,v in pairs(tableToSave) do
+          for _,v in pairs(tableToSave) do
                codeFilter = codeFilter:gsub(patternToMatch, v, 1)
           end
      end
@@ -97,7 +96,7 @@ function filterLOLCODE()
      local getKeywordStart = table.find(escape_keywords, 'and')
      local getKeywordEnd   = table.find(escape_keywords, 'nil')
      local getKeywords = table.sub(escape_keywords, getKeywordStart, getKeywordEnd)
-     for k,v in pairs(getKeywords) do
+     for _,v in pairs(getKeywords) do
           if codeFilter:match('%W+'..v..'%W+') then
                error(("ATtempTd to ENSeRt\nlua keyword\'z entO Lolcode [ "):upper()..codeFilter:match(v).." ]")
           end
@@ -106,7 +105,7 @@ function filterLOLCODE()
      local getOperatorStart = table.find(escape_keywords, '%+')
      local getOperatorEnd   = table.find(escape_keywords, '%]')
      local getOperators = table.sub(escape_keywords, getOperatorStart, getOperatorEnd)
-     for k,v in pairs(getOperators) do
+     for _,v in pairs(getOperators) do
           if codeFilter:match(v) then
                error(("ATtempTd to ENSeRt\nlua operatr\'s entO Lolcode [ "..codeFilter:match(v).." ]"):upper())
           end
@@ -127,8 +126,8 @@ function filterLOLCODE()
           getBukkits[#getBukkits + 1] = l:gsub('%sAN%s', ','):match('.+')
      end
 
-     for k,v in pairs(getBukkits) do
-          for o,p in pairs(v:split(',')) do
+     for _,v in pairs(getBukkits) do
+          for _,p in pairs(v:split(',')) do
                if p:gsub('^%s', '') ~= p:gsub('^%s', ''):match('^YR .+') then
                     error(('mizin YR syntaks\non '..p:gsub('^%s', '')..' whin deeclarin bukkits'):upper())
                end
@@ -136,7 +135,7 @@ function filterLOLCODE()
      end
     
      codeFilter = codeFilter:split('\n')
-     for k,v in pairs(codeFilter) do
+     for k,_ in pairs(codeFilter) do
           -- Variables/Reassigning & Bukkits???
           codeFilter[k] = codeFilter[k]:gsub('ONLY! I HAS A (%a[%w+_]*) ITZ A BUKKIT', 'local %1 = {}')
           codeFilter[k] = codeFilter[k]:gsub('I HAS A (%a[%w+_]*) ITZ A BUKKIT', '%1 = {}')
@@ -145,7 +144,7 @@ function filterLOLCODE()
           codeFilter[k] = codeFilter[k]:gsub('ONLY! I HAS A (%a[%w+_]*)', 'local %1')
           codeFilter[k] = codeFilter[k]:gsub('I HAS A (%a[%w+_]*) ITZ (.-)', '%1 = %2')
           
-          for e,r in pairs(checkIfVarExist) do
+          for _,r in pairs(checkIfVarExist) do
                codeFilter[k] = codeFilter[k]:gsub('SUM OF ('..r..') R (.-)', '%1 = %1 + %2')
                codeFilter[k] = codeFilter[k]:gsub('DIFF OF ('..r..') R (.-)', '%1 = %1 - %2')
                codeFilter[k] = codeFilter[k]:gsub('PRODUKT OF ('..r..') R (.-)', '%1 = %1 * %2')
@@ -155,9 +154,9 @@ function filterLOLCODE()
                codeFilter[k] = codeFilter[k]:gsub('SMOOSH ('..r..') R (.-)', '%1 = %1..%2')
                codeFilter[k] = codeFilter[k]:gsub('('..r..') R (.-)', '%1 = %2')
           end
-          for e,r in pairs(checkIfVarIsBukkit) do
+          for _,r in pairs(checkIfVarIsBukkit) do
                codeFilter[k] = codeFilter[k]:gsub('('..r..') HAS A (.-) ITZ (.-)', '%1[%2] = %3')
-               codeFilter[k] = codeFilter[k]:gsub(' Z (.-) NOW', '[%1]')
+               codeFilter[k] = codeFilter[k]:gsub(' Z (.-) AT', '[%1]')
           end
           
           -- Conditions
@@ -187,7 +186,7 @@ function filterLOLCODE()
           codeFilter[k] = codeFilter[k]:gsub('FOUND YR (.-)', 'return %1')
           codeFilter[k] = codeFilter[k]:gsub('INFINITE', '...')
           codeFilter[k] = codeFilter[k]:gsub('WIN', 'true')
-          codeFilter[k] = codeFilter[k]:gsub('LOSE', 'false')
+          codeFilter[k] = codeFilter[k]:gsub('FAIL', 'false')
           codeFilter[k] = codeFilter[k]:gsub('IDK', 'nil')
      end
     
@@ -205,8 +204,8 @@ function filterLOLCODE()
                end
           end
         
-          for k,v in pairs(getParams) do
-               for o,p in pairs(v:split(',')) do
+          for _,v in pairs(getParams) do
+               for _,p in pairs(v:split(',')) do
                     if p:gsub('^%s', '') ~= p:gsub('^%s', ''):match('^YR .+') then
                          error(('mizin YR syntaks\non '..p:gsub('^%s', '')..' '..erroMsg):upper())
                     end
@@ -219,6 +218,7 @@ function filterLOLCODE()
      checkParamSyntax('VISIBLE', '[^\n]*', 'whin prnting aa valeu k?')
      checkParamSyntax('INVISIBLE', '[^\n]*', 'whin prnting aa erroz k?')
      checkParamSyntax('TYPEZ', '[^\n]*', 'whin cheking typez of teh valeu k?')
+     checkParamSyntax('PAERZ', '[^\n]*', 'whin iteratin frum bukkits')
     
      codeFilter = codeFilter:gsub('ONLY! HOW IZ I (%a[%w+_]*%(.-%))(.-)IF U SAY SO', 'local function %1%2end')
      codeFilter = codeFilter:gsub('HOW IZ I (%a[%w+_]*%(.-%))(.-)IF U SAY SO', 'function %1%2end')
@@ -227,10 +227,11 @@ function filterLOLCODE()
      codeFilter = codeFilter:gsub('I IZ (%a[%w+_]*%(.-%))(.-) MKAY', '%1%2')
      
      -- Sugar Syntax
-     for i = 1, 100 do
+     for _ = 1, 100 do
           codeFilter = codeFilter:gsub('VISIBLE (%(.-%))(.*)[^\n]*', 'debugPrint%1%2')
           codeFilter = codeFilter:gsub('INVISIBLE (%(.-%))(.*)[^\n]*', 'error%1%2')
           codeFilter = codeFilter:gsub('TYPEZ (%(.-%))(.*)[^\n]*', 'type%1%2')
+          codeFilter = codeFilter:gsub('PAERZ (%(.-%))(.*)[^\n]*', 'pairs%1%2')
      end
     
      codeFilter = codeFilter:gsub('EXTEND 3 OBTW (.-)TLDR', '--[===[%1]===]')
@@ -270,18 +271,8 @@ function checkLOLCODE()
      end
      
      local codeResult = ''
-     for k,v in pairs(codeFilter) do
+     for _,v in pairs(codeFilter) do
           codeResult = codeResult .. v .. '\n'
-     end
-     
-     local function checkSyntax(syntax, replace)
-          local kywCount = 1
-          for detect in codeResult:gmatch(syntax) do
-               kywCount = kywCount + 1
-          end
-          for i = 1, kywCount do
-               codeResult = codeResult:gsub(syntax, replace)
-          end
      end
      
      return codeResult:sub(1, #codeResult - #'\n')
