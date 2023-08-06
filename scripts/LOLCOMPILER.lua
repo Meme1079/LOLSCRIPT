@@ -157,7 +157,7 @@ function filterLOLCODE()
           end
           for e,r in pairs(checkIfVarIsBukkit) do
                codeFilter[k] = codeFilter[k]:gsub('('..r..') HAS A (.-) ITZ (.-)', '%1[%2] = %3')
-               codeFilter[k] = codeFilter[k]:gsub('('..r..') Z (.-) NOW', '%1[%2]')
+               codeFilter[k] = codeFilter[k]:gsub(' Z (.-) NOW', '[%1]')
           end
           
           -- Conditions
