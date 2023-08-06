@@ -47,8 +47,13 @@ local codeFilter  = LOLCODE:match(codePattern)
 local saveLOLCODE = {}
 function filterLOLCODE()
      local checkIfVarExist = {}
-     for matchy in LOLCODE:gmatch('I HAS A ([%w+_.]+)') do
+     for matchy in LOLCODE:gmatch('I HAS A ([%w+_]+)') do
           table.insert(checkIfVarExist, matchy)
+     end
+     
+     local checkIfVarIsBukkit = {}
+     for matchy in LOLCODE:gmatch('I HAS A (%a[%w+_]*) ITZ A BUKKIT') do
+          table.insert(checkIfVarIsBukkit, matchy)
      end
      
      local saveToMultiYarns    = {}
@@ -111,10 +116,31 @@ function filterLOLCODE()
      showSyntaxLOLCODE(saveToSingleYarn, '$SingleYarn!')
      showSyntaxLOLCODE(saveToMultiComments, '$MultiComment!')
      showSyntaxLOLCODE(saveToSingleComment, '$SingleComment!')
+     
+     local getBukkits = {}
+     for l in codeFilter:gmatch('{(.-)}') do
+          if l:match('{') or l:match('}') then
+               local errorMsg = 'oh hi attemptd tO ENsert\nnestd bukkitz to avoid this just BUKKIT Variabl\nEnside teh bukKIT'
+               error(errorMsg:upper())
+               break
+          end
+          getBukkits[#getBukkits + 1] = l:gsub('%sAN%s', ','):match('.+')
+     end
+
+     for k,v in pairs(getBukkits) do
+          for o,p in pairs(v:split(',')) do
+               if p:gsub('^%s', '') ~= p:gsub('^%s', ''):match('^YR .+') then
+                    error(('mizin YR syntaks\non '..p:gsub('^%s', '')..' whin deeclarin bukkits'):upper())
+               end
+          end
+     end
     
      codeFilter = codeFilter:split('\n')
      for k,v in pairs(codeFilter) do
-          -- Variables/Reassigning
+          -- Variables/Reassigning & Bukkits???
+          codeFilter[k] = codeFilter[k]:gsub('ONLY! I HAS A (%a[%w+_]*) ITZ A BUKKIT', 'local %1 = {}')
+          codeFilter[k] = codeFilter[k]:gsub('I HAS A (%a[%w+_]*) ITZ A BUKKIT', '%1 = {}')
+          
           codeFilter[k] = codeFilter[k]:gsub('ONLY! I HAS A (%a[%w+_]*) ITZ (.-)', 'local %1 = %2')
           codeFilter[k] = codeFilter[k]:gsub('ONLY! I HAS A (%a[%w+_]*)', 'local %1')
           codeFilter[k] = codeFilter[k]:gsub('I HAS A (%a[%w+_]*) ITZ (.-)', '%1 = %2')
@@ -129,7 +155,11 @@ function filterLOLCODE()
                codeFilter[k] = codeFilter[k]:gsub('SMOOSH ('..r..') R (.-)', '%1 = %1..%2')
                codeFilter[k] = codeFilter[k]:gsub('('..r..') R (.-)', '%1 = %2')
           end
-        
+          for e,r in pairs(checkIfVarIsBukkit) do
+               codeFilter[k] = codeFilter[k]:gsub('('..r..') HAS A (.-) ITZ (.-)', '%1[%2] = %3')
+               codeFilter[k] = codeFilter[k]:gsub('('..r..') Z (.-) NOW', '%1[%2]')
+          end
+          
           -- Conditions
           codeFilter[k] = codeFilter[k]:gsub('BOTH SAEM (.-) AN (.-)', '%1 == %2')
           codeFilter[k] = codeFilter[k]:gsub('DIFFRINT (.-) AN (.-)', '%1 ~= %2')
@@ -155,6 +185,7 @@ function filterLOLCODE()
           -- Other
           codeFilter[k] = codeFilter[k]:gsub('CHECK (.-) ORLY%? (.-) NAH ITZ (.-)', '%1 and %2 or %3')
           codeFilter[k] = codeFilter[k]:gsub('FOUND YR (.-)', 'return %1')
+          codeFilter[k] = codeFilter[k]:gsub('INFINITE', '...')
           codeFilter[k] = codeFilter[k]:gsub('WIN', 'true')
           codeFilter[k] = codeFilter[k]:gsub('LOSE', 'false')
           codeFilter[k] = codeFilter[k]:gsub('IDK', 'nil')
@@ -182,16 +213,25 @@ function filterLOLCODE()
                end
           end
      end
-    
-     checkParamSyntax('HOW IZ I', 'IF U SAY SO', 'whin dEeclarin funcshun k?')
+     
+     checkParamSyntax('HOW IZ I', 'IF U SAY SO', 'whin deeclarin funcshun k?')
      checkParamSyntax('I IZ', 'MKAY', 'whin caling teh funcshun k?')
      checkParamSyntax('VISIBLE', '[^\n]*', 'whin prnting aa valeu k?')
+     checkParamSyntax('INVISIBLE', '[^\n]*', 'whin prnting aa erroz k?')
+     checkParamSyntax('TYPEZ', '[^\n]*', 'whin cheking typez of teh valeu k?')
     
      codeFilter = codeFilter:gsub('ONLY! HOW IZ I (%a[%w+_]*%(.-%))(.-)IF U SAY SO', 'local function %1%2end')
      codeFilter = codeFilter:gsub('HOW IZ I (%a[%w+_]*%(.-%))(.-)IF U SAY SO', 'function %1%2end')
      codeFilter = codeFilter:gsub('HOW IZ I(%(.-%))(.-)IF U SAY SO', 'function%1%2end')
+     codeFilter = codeFilter:gsub('I IZ (%a[%w+_]*%[.-%]%(.-%))(.-) MKAY', '%1%2')
      codeFilter = codeFilter:gsub('I IZ (%a[%w+_]*%(.-%))(.-) MKAY', '%1%2')
-     codeFilter = codeFilter:gsub('VISIBLE (%(.-%))(.*)[^\n]*', 'debugPrint%1%2')
+     
+     -- Sugar Syntax
+     for i = 1, 100 do
+          codeFilter = codeFilter:gsub('VISIBLE (%(.-%))(.*)[^\n]*', 'debugPrint%1%2')
+          codeFilter = codeFilter:gsub('INVISIBLE (%(.-%))(.*)[^\n]*', 'error%1%2')
+          codeFilter = codeFilter:gsub('TYPEZ (%(.-%))(.*)[^\n]*', 'type%1%2')
+     end
     
      codeFilter = codeFilter:gsub('EXTEND 3 OBTW (.-)TLDR', '--[===[%1]===]')
      codeFilter = codeFilter:gsub('EXTEND 2 OBTW (.-)TLDR', '--[==[%1]==]')
@@ -202,12 +242,14 @@ function filterLOLCODE()
      codeFilter = codeFilter:gsub('EXTEND 2 <"(.-)">', '[==[%1]==]')
      codeFilter = codeFilter:gsub('EXTEND 1 <"(.-)">', '[=[%1]=]')
      codeFilter = codeFilter:gsub('<"(.-)">', '[[%1]]')
+     
+     codeFilter = codeFilter:gsub('BLOCK(.-)OK', 'do%1end')
     
      codeFilter = codeFilter:split('\n')
      for k,v in pairs(codeFilter) do
-          codeFilter[k] = codeFilter[k]:gsub('YR%s', '')
-          codeFilter[k] = codeFilter[k]:gsub('%sAN%s', ', ')
           codeFilter[k] = codeFilter[k]:gsub('BTW (.*)', '-- %1')
+          codeFilter[k] = codeFilter[k]:gsub('YR%s(.-)%sAN', '%1,')
+          codeFilter[k] = codeFilter[k]:gsub('YR%s(.-)', '%1')
      end
 end
 
